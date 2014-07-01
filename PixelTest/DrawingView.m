@@ -10,7 +10,20 @@
 
 @implementation DrawingView
 
-- (void)drawRedForEvent:(NSEvent *)theEvent {
+- (void)clearView {
+    memset_pattern4(self.pixels, (unsigned char[4]){255, 0, 0, 0}, self.pixelsWide * self.pixelsHigh * 4);
+    [self refresh];
+}
+
+- (id)initWithFrame:(NSRect)frameRect {
+    self = [super initWithFrame:frameRect];
+    if (self) {
+        [self clearView];
+    }
+    return self;
+}
+
+- (void)drawWhiteForEvent:(NSEvent *)theEvent {
     CGPoint pointInView = [self convertPoint:[theEvent locationInWindow] fromView:nil];
     NSInteger x, y;
     if ([self getPixelX:&x pixelY:&y forPoint:pointInView]) {
@@ -27,17 +40,16 @@
 - (void)setFrame:(NSRect)frameRect {
     if (!CGRectEqualToRect(frameRect, self.frame)) {
         [super setFrame:frameRect];
-        memset_pattern4(self.pixels, (unsigned char[4]){255, 0, 0, 0}, self.pixelsWide * self.pixelsHigh * 4);
-        [self refresh];
+        [self clearView];
     }
 }
 
 - (void)mouseDown:(NSEvent *)theEvent {
-    [self drawRedForEvent:theEvent];
+    [self drawWhiteForEvent:theEvent];
 }
 
 - (void)mouseDragged:(NSEvent *)theEvent {
-    [self drawRedForEvent:theEvent];
+    [self drawWhiteForEvent:theEvent];
 }
 
 @end
